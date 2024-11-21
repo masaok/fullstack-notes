@@ -1,0 +1,6 @@
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:masaok/frontend-notes.git
+[submodule "backend/supabase"]
+	path = backend/supabase
+	url = git@github.com:masaok/supabase-notes.git
