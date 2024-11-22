@@ -1,3 +1,15 @@
+- [Git Submodules](#git-submodules)
+  - [Steps to Add Git Submodules](#steps-to-add-git-submodules)
+  - [Benefits of Git Submodules](#benefits-of-git-submodules)
+  - [Drawbacks of Git Submodules](#drawbacks-of-git-submodules)
+  - [Alternatives to Git Submodules](#alternatives-to-git-submodules)
+  - [Conclusion](#conclusion)
+- [Pushing to a Submodule Requires Updating and Pushing the Parent](#pushing-to-a-submodule-requires-updating-and-pushing-the-parent)
+  - [1. **Pushing Changes to the Submodule**](#1-pushing-changes-to-the-submodule)
+  - [2. **Updating the Parent Repository**](#2-updating-the-parent-repository)
+  - [3. **Pushing the Parent Repository**](#3-pushing-the-parent-repository)
+  - [Summary](#summary)
+
 Combining both Frontend and Backend notes using Git submodules.
 
 When you clone this repository, you’ll need to initialize and update the submodules:
@@ -6,7 +18,7 @@ When you clone this repository, you’ll need to initialize and update the submo
 git submodule update --init --recursive
 ```
 
-### Git Submodules
+## Git Submodules
 
 A **Git submodule** allows you to include one Git repository inside another, essentially linking the two repositories in a way that enables you to keep them separate but connected. This is a more Git-native solution for linking repositories than using symlinks. The submodule is essentially a reference to a specific commit of another repository, and it can be updated independently.
 
@@ -80,3 +92,42 @@ If you don't want to use submodules and want something simpler, here are some ot
 ### Conclusion
 
 Git submodules are the closest equivalent to soft links between repositories in Git. They allow you to maintain the separation between repositories while linking them together in a manageable way.
+
+## Pushing to a Submodule Requires Updating and Pushing the Parent
+
+If you push changes to a **submodule**, you don’t necessarily need to push the **parent module** immediately, but you will likely want to do so to ensure the parent module points to the updated commit in the submodule. Here’s how it works:
+
+### 1. **Pushing Changes to the Submodule**
+
+- When you make changes in a submodule and push those changes to the submodule's own repository, it only affects that specific submodule repository.
+- However, the parent repository keeps a **reference to the specific commit** of the submodule that it’s tracking.
+
+### 2. **Updating the Parent Repository**
+
+- After updating and pushing changes in the submodule, the parent repository will still be referencing the old commit ID of the submodule. To update this reference:
+  - Go to the parent repository.
+  - Run `git add` on the submodule directory to register the new commit reference.
+  - Commit the change in the parent repository, which now points to the updated submodule commit.
+
+```bash
+git add path/to/submodule
+git commit -m "Updated submodule to latest commit"
+```
+
+### 3. **Pushing the Parent Repository**
+
+- After committing the updated submodule reference, push the changes in the parent repository. This step ensures that when others pull the parent repository, they’ll see the latest commit of the submodule.
+
+```bash
+git push origin main
+```
+
+### Summary
+
+If you make changes to a submodule:
+
+1. Push those changes to the submodule's own repository.
+2. Update the submodule reference in the parent repository and commit.
+3. Push the parent repository to share the updated submodule reference with others.
+
+If you skip updating and pushing the parent repository, others will not see the updated submodule commit when they pull the parent repository.
